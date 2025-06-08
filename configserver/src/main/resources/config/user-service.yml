@@ -1,0 +1,46 @@
+server:
+  port: 8082
+
+spring:
+  config:
+    activate:
+    on-profile: local
+  cloud:
+    inetutils:
+      preferred-networks: 127.0.0.1
+  data:
+    mongodb:
+      #uri: mongodb+srv://root:kuo7heng@mongodb://172.23.1.10:27017
+      uri: mongodb://172.23.1.10:27017/userdb
+      database: userdb
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  file:
+    name: logs/${spring.application.name}.log
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB
+      max-history: 7

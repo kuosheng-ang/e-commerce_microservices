@@ -1,0 +1,12 @@
+services:
+  order:
+    image: "kuoshengclement/order-service:dev011"
+    container_name: order-service
+    ports:
+      - "8110:8110"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - kuoshengclement

@@ -1,0 +1,98 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:mysql://localhost:3309/userdb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: kuosheng
+  profiles:
+    active: dev
+  sql:
+    init:
+      mode: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        ddl-auto: create
+        dialect: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  config:
+    import: "optional:configserver:http://localhost:8072/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+  app:
+    jwtSecret: "mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm"
+    jwtExpirationMs: 30000
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+info:
+  app:
+    name: "user-service"
+    description: "kuoshengclement user-service E-Commerce Application"
+    version: "1.0.0"
+
+user-config:
+  message: "kuoshengclement E-Commerce Application - user related APIs details"
+  contactDetails:
+    name: "kuosheng clement - Developer"
+    email: "kuosheng.ang@gmail.com"
+    onCallSupport:
+      phone: "+65 98389261"
+    serverPort:
+      port: 8082
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+      security: DEBUG
+    hibernate:
+      SQL: DEBUG
+    com:
+      ecommerce:
+        user: DEBUG
+

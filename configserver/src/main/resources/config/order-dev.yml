@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+    on-profile: local
+  cloud:
+    inetutils:
+      preferred-networks: 127.0.0.1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  health:
+    circuitbreakers:
+      enabled: true

@@ -1,0 +1,104 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "product-service"
+  datasource:
+    url: jdbc:mysql://localhost:3308/productdb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: kuosheng
+  profiles:
+    active: default
+  sql:
+    init:
+      mode: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
+  config:
+    import: "optional:configserver:http://localhost:8072/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+  cloud:
+    inetutils:
+      preferred-networks: 127.0.0.1
+project:
+  image: images/
+
+image:
+  base:
+    url: http://localhost:8080/images
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+info:
+  app:
+    name: "product-service"
+    description: "kuoshengclement E-Commerce Application"
+    version: "1.0.0"
+
+product-config:
+  message: "kuoshengclement E-Commerce Application - product related APIs details"
+  contactDetails:
+    name: "kuosheng clement - Developer"
+    email: "kuosheng.ang@gmail.com"
+  onCallSupport:
+    phone: "+65 98389261"
+  serverDetails:
+    port: 8080
+
+category-config:
+  message: "kuoshengclement E-Commerce Application - category related APIs details"
+  contactDetails:
+    name: "kuosheng clement - Developer"
+    email: "kuosheng.ang@gmail.com"
+  onCallSupport:
+    phone: "+65 98389261"
+  serverDetails:
+    port: 8080
+
+
+
+
+

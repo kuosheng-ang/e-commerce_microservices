@@ -1,0 +1,140 @@
+services:
+  network-deploy-service:
+    networks:
+      - kuoshengclement
+
+  microservice-postgres-config:
+    container_name: postgres_container
+    image: postgres:14.3
+    extends:
+      service: network-deploy-service
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}" ]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 15s
+    environment:
+      POSTGRES_DATABASE: $POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_ROOT_USER: postgres
+      POSTGRES_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+    volumes:
+      - postgres:/data/postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    extends:
+      service: network-deploy-service
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'true'
+      POSTGRES_USER: 'root'
+      POSTGRES_USERNAME: 'root'
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_ROOT_USER: postgres
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5056:80"
+    restart: unless-stopped
+
+  microservice-mysqldb-config:
+    extends:
+      service: network-deploy-service
+    image: mysql:9.3.0
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+
+
+  microservice-base-config:
+    extends:
+      service: network-deploy-service
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      #JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.11.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
+      OTEL_METRICS_EXPORTER: none
+      OTEL_LOGS_EXPORTER: none
+
+  microservice-configserver-config:
+    extends:
+      service: microservice-base-config
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8072/
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+
+
+  microservice-eureka-config:
+    extends:
+      service: microservice-configserver-config
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+
+
+  mongodb_container:
+    image: mongo:latest
+    container_name: mongodb
+    extends:
+      service: network-deploy-service
+    env_file:
+      - .env
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+    environment:
+      MONGO_URL: mongodb://172.23.1.10:27017
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: kuo7heng
+    restart: unless-stopped
+
+
+networks:
+  kuoshengclement:
+    driver: bridge
+
+
+volumes:
+  postgres:
+  pgadmin:
+  pgdata:
+  mongodb_data_container:
+
+
+#  docker run -p 3307:3306 --name loans-db \
+#  -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=loansdb \
+#  -d mysql
+#  docker run -p 3308:3306 --name cards-db \
+#  -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=cardsdb \
+#  -d mysql
+#  docker run -p 5433:5432 --name ordersdb -e POSTGRES_USER=root -e POSTGRES_PASSWORD=kuosheng -e POSTGRES_DATABASE=ordersdb -d postgres

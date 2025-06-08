@@ -1,0 +1,97 @@
+server:
+  port: 8081
+
+
+spring:
+  config:
+    activate:
+    on-profile: default
+  cloud:
+    inetutils:
+      preferred-networks: 127.0.0.1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  health:
+    circuitbreakers:
+      enabled: true
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#
+#app:
+#  message: "Hello Order!"
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+#    register-with-eureka: true
+#    fetch-registry: true
+#
+#logging:
+#  file:
+#    name: logs/${spring.application.name}.log
+#  logback:
+#    rollingpolicy:
+#      max-file-size: 5MB
+#      max-history: 7
+#
+#
+## Circuit Breaker
+#resilience4j:
+#  circuitbreaker:
+#    instances:
+#      productService:
+#        registerHealthIndicator: true
+#        slidingWindowSize: 10
+#        minimumNumberOfCalls: 5
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        waitDurationInOpenState: 10s
+#        failureRateThreshold: 50
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#        slidingWindowType: count_based
+#  retry:
+#    instances:
+#      retryBreaker:
+#        maxAttempts: 5
+#        waitDuration: 5s
+#  ratelimiter:
+#    instances:
+#      rateBreaker:
+#        timeout-duration: 0
+#        limit-refresh-period: 4s
+#        limit-for-period: 2
+
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://orderdb:5432/orderdb
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
+#  jpa:
+#    database: POSTGRESQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect

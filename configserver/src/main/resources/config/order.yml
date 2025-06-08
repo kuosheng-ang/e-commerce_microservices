@@ -1,0 +1,11 @@
+build:
+  version: "2.0"
+
+order:
+  message: "Welcome to Walmart orders related local APIs "
+  contactDetails:
+    name: "kuoshengclement - Developer"
+    email: "admin@kuoshengclement.net"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345

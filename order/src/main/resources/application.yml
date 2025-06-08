@@ -1,0 +1,87 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: order-service
+  datasource:
+    #driverClassName: com.mysql.jdbc.Driver
+    #driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/orderdb
+    username: root
+    password: kuosheng
+  profiles:
+    active: "dev"
+  sql:
+    init:
+      mode: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        ddl-auto: create
+        dialect: org.hibernate.dialect.MySQLDialect
+  config:
+    import: "optional:configserver:http://localhost:8072/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        #include: "refresh"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# need to make sure we are enabling the actuator API path which is bus refresh inside all our microservices instances.
+#
+#
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+info:
+  app:
+    name: "order-service"
+    description: "kuoshengclement order-service E-Commerce Application"
+    version: "1.0.0"
+
+order-config:
+  message: "kuoshengclement E-Commerce Application - order related APIs details"
+  contactDetails:
+    name: "kuosheng clement - Developer"
+    email: "kuosheng.ang@gmail.com"
+  onCallSupport:
+    phone: "+65 98389261"
+  serverPort:
+    port: 8081
