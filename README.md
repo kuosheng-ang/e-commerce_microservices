@@ -266,7 +266,7 @@ With a focus on scalability, resilience, and real-time interaction, Micro Market
 
 - Eureka Dashboard
    - Services (Clients) discovered can be viewed on http://localhost:8761/
-    ![Eureka Dashboard](docs/images/architecture/Eureka-server.png)
+    ![Eureka Dashboard](docs/images/architecture/Eureka-server.PNG)
 
 
 - Zipkin UI
