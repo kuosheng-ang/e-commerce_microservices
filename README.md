@@ -158,6 +158,9 @@ With a focus on scalability, resilience, and real-time interaction, Micro Market
     </table>
 </div>
 
+### Kubernetes Cluster Deployment for each microservice (ie: user, product, order )
+![Kubernetes-Cluster](docs/images/architecture/kubernetes-deployment.png)
+
 
 ## Getting Started
 
