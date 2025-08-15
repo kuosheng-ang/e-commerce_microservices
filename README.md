@@ -162,6 +162,11 @@ With a focus on scalability, resilience, and real-time interaction, Micro Market
 ![Kubernetes-Cluster](docs/images/architecture/kubernetes-deployment.PNG)
 
 
+### Kubernetes Deployment of Product microservices for Books Ecommerce Website 
+
+![Kubernetes-Deployment](docs/images/output/product_microservice_deployment.PNG)
+![Kubernetes-Deployment](docs/images/output/product_microservice_deployment_in_action.PNG)
+
 ## Getting Started
 
 ### Prerequisites
