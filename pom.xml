@@ -8,10 +8,10 @@
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ecommerce</groupId>
-	<artifactId>ms</artifactId>
+	<groupId>com.ecommerce.ms</groupId>
+	<artifactId>ecommerce-microservices</artifactId>
 	<version>0.1.6</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<description>Book eCommerce Project</description>  <!-- inherited from Order service ecommerce project module-->
 	<url/>
 	<licenses>
@@ -36,11 +36,6 @@
 		<spring-boot-starter-security.version>3.4.3</spring-boot-starter-security.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>com.ecommerce.ms</groupId>
-			<artifactId>core</artifactId>
-			<version>0.1.5</version>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
